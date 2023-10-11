@@ -1,0 +1,93 @@
+// Перевод чисел в различные системы счисления
+
+#include <iostream>
+
+using namespace std;
+
+char digit_to_char(int num)
+{
+    switch(num) {
+    case 0:
+        return '0';
+    case 1:
+        return '1';
+    case 2:
+        return '2';
+    case 3:
+        return '3';
+    case 4:
+        return '4';
+    case 5:
+        return '5';
+    case 6:
+        return '6';
+    case 7:
+        return '7';
+    case 8:
+        return '8';
+    case 9:
+        return '9';
+    case 10:
+        return 'A';
+    case 11:
+        return 'B';
+    case 12:
+        return 'C';
+    case 13:
+        return 'D';
+    case 14:
+        return 'E';
+    case 15:
+        return 'F';
+    }
+}
+
+int int_to_base(int decimal_number, int new_base, char* result_string)
+{
+    int remainder = decimal_number % new_base;
+    decimal_number /= new_base;
+    if(decimal_number == 0) {
+        result_string[0] = digit_to_char(remainder);
+        return 1;
+    }
+    int k = int_to_base(decimal_number, new_base, result_string);
+    result_string[k++] = digit_to_char(remainder);
+    return k;
+}
+
+void double_to_base(double number, int new_base, char* result_string)
+{
+    int iteration = 0;
+    int k = 0;
+    double number_copy = number;
+
+    do {
+        number_copy = number_copy * new_base;
+        int digit_value = (int)(number_copy);
+        result_string[k++] = digit_to_char(digit_value);
+        number_copy -= (int)number_copy;
+        iteration++;
+    } while(number_copy > 0.00000001 && iteration < 10);
+
+    result_string[k] = '\0';
+}
+
+int main()
+{
+    double decimal_number{};
+    char number_in_words[80]{};
+    int base{ 0 };
+
+    cout << "Enter a number: ";
+    cin >> decimal_number;
+
+    cout << "Enter a base of number system: ";
+    cin >> base;
+
+    int k = int_to_base((int)decimal_number, base, number_in_words);
+    number_in_words[k++] = ',';
+    double_to_base(decimal_number - (int)decimal_number, base, &number_in_words[k]);
+    cout << "\n" << number_in_words;
+
+    return 0;
+}
